@@ -1,18 +1,10 @@
-// Функция для получения данных из файла db.json
 const getData = () => {
-  return fetch('db.json') // файл db.json должен находиться в корне проекта
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok: ' + response.statusText);
-          }
-          return response.json();
-      })
+  return fetch('db.json') 
+      .then(response => response.json())
       .catch(error => {
           console.error('Ошибка при получении данных:', error);
       });
 }
-
-// Функция для отправки данных на указанный URL
 const sendData = (data) => {
   return fetch('https://jsonplaceholder.typicode.com/posts', {
       method: 'POST',
@@ -21,12 +13,7 @@ const sendData = (data) => {
       },
       body: JSON.stringify(data),
   })
-  .then(response => {
-      if (!response.ok) {
-          throw new Error('Network response was not ok: ' + response.statusText);
-      }
-      return response.json();
-  })
+  .then(response => response.json())
   .then(result => {
       console.log('Данные успешно отправлены:', result);
   })
@@ -34,8 +21,6 @@ const sendData = (data) => {
       console.error('Ошибка при отправке данных:', error);
   });
 }
-
-// Функция, которая выполняется при загрузке страницы
 const init = () => {
   getData().then(data => {
       if (data) {
@@ -43,6 +28,4 @@ const init = () => {
       }
   });
 }
-
-// Вызываем init() при загрузке страницы
-window.onload = init;
+w.onload = init;
