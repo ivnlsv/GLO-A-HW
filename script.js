@@ -1,39 +1,46 @@
-const now = new Date();
-
-let greeting;
-const hours = now.getHours();
-if (hours < 6) {
-  greeting = "Доброй ночи";
-} else if (hours < 12) {
-  greeting = "Доброе утро";
-} else if (hours < 18) {
-  greeting = "Добрый день";
-} else {
-  greeting = "Добрый вечер";
+// Функция для получения данных из файла db.json
+async function getData() {
+  try {
+      const response = await fetch('db.json'); // файл db.json должен находиться в корне проекта
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
+      const data = await response.json();
+      return data;
+  } catch (error) {
+      console.error('Ошибка при получении данных:', error);
+  }
 }
 
-const daysOfWeek = [
-  "Воскресенье",
-  "Понедельник",
-  "Вторник",
-  "Среда",
-  "Четверг",
-  "Пятница",
-  "Суббота",
-];
-const dayOfWeek = daysOfWeek[now.getDay()];
+// Функция для отправки данных на указанный URL
+async function sendData(data) {
+  try {
+      const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+      });
 
-const currentTime = now.toLocaleTimeString("en-US");
+      if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+      }
 
-const nextYear = new Date(now.getFullYear() + 1, 0, 1); // 1 января следующего года
-const diffTime = nextYear - now;
-const daysUntilNewYear = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const result = await response.json();
+      console.log('Данные успешно отправлены:', result);
+  } catch (error) {
+      console.error('Ошибка при отправке данных:', error);
+  }
+}
 
-document.getElementById("greeting").innerText = greeting;
-document.getElementById("today").innerText = `Сегодня: ${dayOfWeek}`;
-document.getElementById(
-  "currentTime"
-).innerText = `Текущее время: ${currentTime}`;
-document.getElementById(
-  "daysUntilNewYear"
-).innerText = `До нового года осталось ${daysUntilNewYear} дней`;
+// Функция, которая выполняется при загрузке страницы
+async function init() {
+  const data = await getData();
+  if (data) {
+      await sendData(data);
+  }
+}
+
+// Вызываем init() при загрузке страницы
+window.onload = init;
