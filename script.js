@@ -15,7 +15,7 @@ const sendData = (data) => {
   })
   .then(response => response.json())
   .then(result => {
-      console.log('Данные успешно отправлены:', result);
+      console.log('Данные отправлены:', result);
   })
   .catch(error => {
       console.error('Ошибка при отправке данных:', error);
